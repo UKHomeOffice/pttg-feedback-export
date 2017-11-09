@@ -1,2 +1,2 @@
 # pttg-feedback-export
-feedback data access to csv export
+Provides access to feedback data
