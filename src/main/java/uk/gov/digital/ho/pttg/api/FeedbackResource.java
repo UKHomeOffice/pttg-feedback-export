@@ -14,6 +14,7 @@ import uk.gov.digital.ho.pttg.dto.FeedbackWhyNot;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
@@ -42,7 +43,7 @@ public class FeedbackResource {
         FeedbackDetail detail = mapper.fromJson(f.getDetail(), FeedbackDetail.class);
         FeedbackWhyNot whynot = detail.getWhynot();
         final String matchOther = detail.getMatchOther() == null ? detail.getMatchComment() : detail.getMatchOther();
-        final String formattedTimestamp = f.getTimestamp() !=null ? DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).format(f.getTimestamp()) : "";
+        final String formattedTimestamp = f.getTimestamp() !=null ? DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).withLocale(Locale.ENGLISH).format(f.getTimestamp()) : "";
         return FeedbackCsvView.builder()
                 .timestamp(formattedTimestamp)
                 .nino(detail.getNino())
