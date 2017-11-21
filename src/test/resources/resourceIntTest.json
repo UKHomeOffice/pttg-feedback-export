@@ -1,0 +1,16 @@
+[
+  {
+    "uuid": "some uuid",
+    "timestamp": "2017-09-11T14:45:48.000",
+    "sessionId": "some session id",
+    "userId": "james.nail@digital.homeoffice.gov.uk",
+    "detail": "{}"
+  },
+  {
+    "uuid": "someuuid",
+    "timestamp": "2017-09-12T14:45:48.000",
+    "sessionId": "somesessionid",
+    "userId": "james.nail@digital.homeoffice.gov.uk",
+    "detail": "{\"nino\": \"JB557733D\", \"match\": \"yes\", \"whynot\": {\"combinedincome\": true, \"multiple_employers\": true, \"pay_frequency_change\": false}, \"caseref\": \"21111111\", \"matchOther\": \"test2\"}"
+  }
+]

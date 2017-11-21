@@ -8,28 +8,35 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
-import uk.gov.digital.ho.pttg.jpa.FeedbackRepository;
 import uk.gov.digital.ho.pttg.dto.FeedbackCsvView;
-import uk.gov.digital.ho.pttg.jpa.Feedback;
+import uk.gov.digital.ho.pttg.dto.FeedbackDto;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.digital.ho.pttg.jpa.FeedbackRepositoryTest.*;
+import static uk.gov.digital.ho.pttg.api.FeedbackResource.CSV_DATE_FORMAT;
 
 
 @RunWith(MockitoJUnitRunner.class)
 public class FeedbackResourceTest {
 
+    private static final String SESSION_ID = "sessionID";
+    private static final String DEPLOYMENT = "deployment";
+    private static final String USER_ID = "me";
+    private static final String UUID = "uuid";
+    private static final String NAMESPACE = "env";
+    private static final String DETAIL_NO_WHY_NOT_SECTION = "{\"nino\": \"JD123456C\", \"match\": \"yes\"}";
+    private static final String DETAIL = "{\"nino\": \"JB557733D\", \"match\": \"yes\", \"whynot\": {\"combinedincome\": true, \"multiple_employers\": true, \"pay_frequency_change\": false}, \"caseref\": \"21111111\", \"matchOther\": \"test2\"}";
+    private static LocalDateTime NOW = LocalDateTime.now();
+    private static LocalDateTime NOW_PLUS_60_MINS = LocalDateTime.now().plusMinutes(60);
 
     private static final String COMBINED_INCOME_TRUE = "true";
     @Mock
-    private FeedbackRepository mockRepo;
+    private FeedbackService mockService;
 
     @Mock
     private Model mockModel;
@@ -46,21 +53,21 @@ public class FeedbackResourceTest {
     public void testCollaboratorsGettingFeedback() throws IOException {
 
 
-        when(mockRepo.findAllByOrderByTimestampDesc()).thenReturn(buildFeedbackList());
+        when(mockService.getAllFeedback()).thenReturn(buildFeedbackList());
 
         resource.allFeedback(mockModel);
 
-        verify(mockRepo).findAllByOrderByTimestampDesc();
+        verify(mockService).getAllFeedback();
 
         verify(mockModel).addAttribute("feedback", buildFeedbackViewList());
     }
 
-    private List<Feedback> buildFeedbackList() {
+    private List<FeedbackDto> buildFeedbackList() {
         return ImmutableList.of(createFeedback(NOW, DETAIL), createFeedback(NOW_PLUS_60_MINS, DETAIL_NO_WHY_NOT_SECTION));
     }
 
-    private Feedback createFeedback(LocalDateTime timestamp, String detail) {
-        return Feedback.builder().detail(detail)
+    private FeedbackDto createFeedback(LocalDateTime timestamp, String detail) {
+        return FeedbackDto.builder().detail(detail)
                 .sessionId(SESSION_ID)
                 .deployment(DEPLOYMENT)
                 .timestamp(timestamp)
@@ -77,15 +84,16 @@ public class FeedbackResourceTest {
 
     private FeedbackCsvView createFeedbackViewWithoutWhyNotSection(LocalDateTime timestamp) {
         return FeedbackCsvView.builder()
-                .timestamp(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(timestamp))
+                .timestamp(DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).format(timestamp))
                 .userId(USER_ID)
                 .nino("JD123456C")
                 .match("yes")
                 .build();
     }
+
     private FeedbackCsvView createFeedbackViewWithWhyNotSection(LocalDateTime timestamp) {
         return FeedbackCsvView.builder()
-                .timestamp(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(timestamp))
+                .timestamp(DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).format(timestamp))
                 .userId(USER_ID)
                 .match("yes")
                 .nino("JB557733D")

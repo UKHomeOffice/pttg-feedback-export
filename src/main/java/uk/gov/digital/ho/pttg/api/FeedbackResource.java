@@ -1,51 +1,51 @@
 package uk.gov.digital.ho.pttg.api;
 
 import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.gov.digital.ho.pttg.jpa.FeedbackRepository;
 import uk.gov.digital.ho.pttg.dto.FeedbackCsvView;
 import uk.gov.digital.ho.pttg.dto.FeedbackDetail;
+import uk.gov.digital.ho.pttg.dto.FeedbackDto;
 import uk.gov.digital.ho.pttg.dto.FeedbackWhyNot;
-import uk.gov.digital.ho.pttg.jpa.Feedback;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Controller
 @Component
 public class FeedbackResource {
 
-    @Autowired
-    FeedbackRepository repo;
 
+    static final String CSV_DATE_FORMAT = "d MMM uuuu h:mm:ss a";
+    private final FeedbackService service;
+
+    public FeedbackResource(FeedbackService service) {
+        this.service = service;
+    }
 
     @RequestMapping(value = "/feedback", method = RequestMethod.GET)
     public String allFeedback(Model model) throws IOException {
-        List<Feedback> feedbackJpaList = repo.findAllByOrderByTimestampDesc();
-        final List<FeedbackCsvView> csvViews = new ArrayList<>();
-        for (Feedback f : feedbackJpaList) {
-            FeedbackCsvView feedbackCsvView = buildCsvView(f);
-            csvViews.add(feedbackCsvView);
-        }
+        List<FeedbackDto> feedbackJpaList = service.getAllFeedback();
+        final List<FeedbackCsvView> csvViews = feedbackJpaList.stream().map(this::buildCsvView).collect(Collectors.toList());
 
         model.addAttribute("feedback", csvViews);
         return "not_used";
     }
 
-    private FeedbackCsvView buildCsvView(Feedback f) {
+    private FeedbackCsvView buildCsvView(FeedbackDto f) {
         Gson mapper = new Gson();
         FeedbackDetail detail = mapper.fromJson(f.getDetail(), FeedbackDetail.class);
         FeedbackWhyNot whynot = detail.getWhynot();
+        final String matchOther = detail.getMatchOther() == null ? detail.getMatchComment() : detail.getMatchOther();
+        final String formattedTimestamp = f.getTimestamp() !=null ? DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).withLocale(Locale.ENGLISH).format(f.getTimestamp()) : "";
         return FeedbackCsvView.builder()
-                .timestamp(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(f.getTimestamp()))
+                .timestamp(formattedTimestamp)
                 .nino(detail.getNino())
                 .userId(f.getUserId())
                 .match(detail.getMatch())
@@ -53,7 +53,7 @@ public class FeedbackResource {
                 .multiple_employers(whynot != null  ? whynot.getMultiple_employers() : null)
                 .pay_frequency_change(whynot != null ? whynot.getPay_frequency_change() : null)
                 .caseref(detail.getCaseref())
-                .matchOther(detail.getMatchOther())
+                .matchOther(matchOther)
                 .build();
     }
 }
