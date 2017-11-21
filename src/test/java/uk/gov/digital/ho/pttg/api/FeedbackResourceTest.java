@@ -14,11 +14,11 @@ import uk.gov.digital.ho.pttg.dto.FeedbackDto;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.digital.ho.pttg.api.FeedbackResource.CSV_DATE_FORMAT;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,7 +32,6 @@ public class FeedbackResourceTest {
     private static final String DETAIL_NO_WHY_NOT_SECTION = "{\"nino\": \"JD123456C\", \"match\": \"yes\"}";
     private static final String DETAIL = "{\"nino\": \"JB557733D\", \"match\": \"yes\", \"whynot\": {\"combinedincome\": true, \"multiple_employers\": true, \"pay_frequency_change\": false}, \"caseref\": \"21111111\", \"matchOther\": \"test2\"}";
     private static LocalDateTime NOW = LocalDateTime.now();
-    private static LocalDateTime NOW_MINUS_60_MINS = LocalDateTime.now().minusMinutes(60);
     private static LocalDateTime NOW_PLUS_60_MINS = LocalDateTime.now().plusMinutes(60);
 
     private static final String COMBINED_INCOME_TRUE = "true";
@@ -85,7 +84,7 @@ public class FeedbackResourceTest {
 
     private FeedbackCsvView createFeedbackViewWithoutWhyNotSection(LocalDateTime timestamp) {
         return FeedbackCsvView.builder()
-                .timestamp(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(timestamp))
+                .timestamp(DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).format(timestamp))
                 .userId(USER_ID)
                 .nino("JD123456C")
                 .match("yes")
@@ -94,7 +93,7 @@ public class FeedbackResourceTest {
 
     private FeedbackCsvView createFeedbackViewWithWhyNotSection(LocalDateTime timestamp) {
         return FeedbackCsvView.builder()
-                .timestamp(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(timestamp))
+                .timestamp(DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).format(timestamp))
                 .userId(USER_ID)
                 .match("yes")
                 .nino("JB557733D")

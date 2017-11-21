@@ -13,7 +13,6 @@ import uk.gov.digital.ho.pttg.dto.FeedbackWhyNot;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +21,7 @@ import java.util.stream.Collectors;
 public class FeedbackResource {
 
 
+    static final String CSV_DATE_FORMAT = "d MMM uuuu h:mm:ss a";
     private final FeedbackService service;
 
     public FeedbackResource(FeedbackService service) {
@@ -42,8 +42,9 @@ public class FeedbackResource {
         FeedbackDetail detail = mapper.fromJson(f.getDetail(), FeedbackDetail.class);
         FeedbackWhyNot whynot = detail.getWhynot();
         final String matchOther = detail.getMatchOther() == null ? detail.getMatchComment() : detail.getMatchOther();
+        final String formattedTimestamp = f.getTimestamp() !=null ? DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).format(f.getTimestamp()) : "";
         return FeedbackCsvView.builder()
-                .timestamp(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(f.getTimestamp()))
+                .timestamp(formattedTimestamp)
                 .nino(detail.getNino())
                 .userId(f.getUserId())
                 .match(detail.getMatch())
