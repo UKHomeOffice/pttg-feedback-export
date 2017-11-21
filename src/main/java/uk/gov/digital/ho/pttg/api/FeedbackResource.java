@@ -14,7 +14,6 @@ import uk.gov.digital.ho.pttg.dto.FeedbackWhyNot;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
