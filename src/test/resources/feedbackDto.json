@@ -1,0 +1,9 @@
+{
+  "uuid" : "some uuid",
+  "timestamp" : "2017-09-11T14:45:48.000",
+  "sessionId" : "some session id",
+  "namespace" : null,
+  "deployment" : null,
+  "userId" : "some user id",
+  "detail" : "{\"nino\": \"JD123456C\",\"match\": \"yes\"}"
+}
