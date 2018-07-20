@@ -54,8 +54,8 @@ public class FeedbackResourceIntTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getHeaders().getContentType().toString()).isEqualTo("text/csv;charset=UTF-8");
-        assertThat(response.getBody()).contains("User ID,Timestamp,NINO,Paper & IPS match,Case ID,Combined Income,Multiple Employers,Pay Frequency Change,Other");
-        assertThat(response.getBody()).contains("james.nail@digital.homeoffice.gov.uk,12 Sep 2017 2:45:48 PM,JB557733D,yes,21111111,true,true,false,test2");
+        assertThat(response.getBody()).contains("User ID,Timestamp,NINO,Paper & IPS match,Why Not?,Other");
+        assertThat(response.getBody()).contains("james.nail@digital.homeoffice.gov.uk,12 Sep 2017 2:45:48 PM,JB557733D,yes,failed b nonsalaried,test2");
 
         verify(
             1,

@@ -11,9 +11,7 @@ public class FeedbackDetail {
 
     private String nino;
     private String match;
-    private String caseref;
+    private String whynot;
     private String matchOther;
-    private String matchComment;
-    private FeedbackWhyNot whynot;
 
 }
