@@ -56,7 +56,6 @@ pipeline:
   deploy-to-dev-from-build-number:
     image: quay.io/ukhomeofficedigital/kd:v0.2.3
     environment:
-      - DOCKER_HOST=tcp://172.17.0.1:2375
       - KUBE_NAMESPACE=pttg-ip-dev
       - ENVIRONMENT=dev
       - VERSION=build-${DRONE_BUILD_NUMBER}
@@ -73,7 +72,6 @@ pipeline:
   deploy:
     image: quay.io/ukhomeofficedigital/kd:v0.8.0
     environment:
-      - DOCKER_HOST=tcp://172.17.0.1:2375
       - KUBE_NAMESPACE=pttg-ip-${DRONE_DEPLOY_TO}
       - ENVIRONMENT=${DRONE_DEPLOY_TO}
       - VERSION=${IMAGE_VERSION}
@@ -88,7 +86,6 @@ pipeline:
   deploy-to-prod:
     image: quay.io/ukhomeofficedigital/kd:v0.8.0
     environment:
-      - DOCKER_HOST=tcp://172.17.0.1:2375
       - KUBE_NAMESPACE=pttg-ip-pr
       - ENVIRONMENT=pr
       - VERSION=${IMAGE_VERSION}
