@@ -14,7 +14,7 @@ RUN yum update -y glibc && \
 WORKDIR /app
 
 RUN groupadd -r ${GROUP} && \
-    useradd -r -u USER_ID -g ${GROUP} ${USER} -d /app && \
+    useradd -r -u ${USER_ID} -g ${GROUP} ${USER} -d /app && \
     mkdir -p /app && \
     chown -R ${USER}:${GROUP} /app
 
