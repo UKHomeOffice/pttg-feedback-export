@@ -18,19 +18,13 @@ public class CsvView extends AbstractCsvView {
     private static final String TITLE_USER_ID = "User ID";
     private static final String TITLE_TIMESTAMP = "Timestamp";
     private static final String TITLE_PAPER_IPS_MATCH = "Paper & IPS match";
-    private static final String TITLE_CASE_ID = "Case ID";
-    private static final String TITLE_COMBINED_INCOME = "Combined Income";
-    private static final String TITLE_MULTIPLE_EMPLOYERS = "Multiple Employers";
-    private static final String TITLE_PAY_FREQUENCY = "Pay Frequency Change";
+    private static final String TITLE_WHYNOT= "Why Not?";
     private static final String TITLE_OTHER = "Other";
     private static final String MAPPING_USER_ID = "userId";
     private static final String MAPPING_TIMESTAMP = "timestamp";
     private static final String MAPPING_NINO = "nino";
     private static final String MAPPING_MATCH = "match";
-    private static final String MAPPING_CASEREF = "caseref";
-    private static final String MAPPING_COMBINED_INCOME = "combinedIncome";
-    private static final String MAPPING_MULTIPLE_EMPLOYERS = "multiple_employers";
-    private static final String MAPPING_PAY_FREQUENCY_CHANGE = "pay_frequency_change";
+    private static final String MAPPING_WHYNOT = "whynot";
     private static final String MAPPING_MATCH_OTHER = "matchOther";
 
     @Override
@@ -40,8 +34,8 @@ public class CsvView extends AbstractCsvView {
         response.setHeader("Content-Disposition", "inline; filename=\"feedback-" + getFormattedTime() + ".csv\"");
 
         List<FeedbackCsvView> feedbackList = (List<FeedbackCsvView>) model.get("feedback");
-        String[] header = {TITLE_USER_ID, TITLE_TIMESTAMP, TITLE_NINO, TITLE_PAPER_IPS_MATCH, TITLE_CASE_ID, TITLE_COMBINED_INCOME, TITLE_MULTIPLE_EMPLOYERS, TITLE_PAY_FREQUENCY, TITLE_OTHER};
-        String[] fieldMappings = {MAPPING_USER_ID, MAPPING_TIMESTAMP, MAPPING_NINO, MAPPING_MATCH, MAPPING_CASEREF, MAPPING_COMBINED_INCOME, MAPPING_MULTIPLE_EMPLOYERS, MAPPING_PAY_FREQUENCY_CHANGE, MAPPING_MATCH_OTHER};
+        String[] header = {TITLE_USER_ID, TITLE_TIMESTAMP, TITLE_NINO, TITLE_PAPER_IPS_MATCH, TITLE_WHYNOT, TITLE_OTHER};
+        String[] fieldMappings = {MAPPING_USER_ID, MAPPING_TIMESTAMP, MAPPING_NINO, MAPPING_MATCH, MAPPING_WHYNOT, MAPPING_MATCH_OTHER};
         ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(),
                 CsvPreference.STANDARD_PREFERENCE);
 

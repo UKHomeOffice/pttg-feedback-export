@@ -14,6 +14,8 @@ import uk.gov.digital.ho.pttg.dto.FeedbackDto;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
@@ -30,11 +32,11 @@ public class FeedbackResourceTest {
     private static final String UUID = "uuid";
     private static final String NAMESPACE = "env";
     private static final String DETAIL_NO_WHY_NOT_SECTION = "{\"nino\": \"JD123456C\", \"match\": \"yes\"}";
-    private static final String DETAIL = "{\"nino\": \"JB557733D\", \"match\": \"yes\", \"whynot\": {\"combinedincome\": true, \"multiple_employers\": true, \"pay_frequency_change\": false}, \"caseref\": \"21111111\", \"matchOther\": \"test2\"}";
+    private static final String DETAIL = "{\"nino\": \"JB557733D\", \"match\": \"yes\", \"whynot\": \"fail-b-nonsalaried\", \"matchOther\": \"test2\"}";
+    private static final String DETAIL_BUGGY_WHYNOT = "{\"nino\": \"JB557733D\", \"match\": \"yes\", \"whynot\": {}, \"matchOther\": \"test2\"}";
     private static LocalDateTime NOW = LocalDateTime.now();
     private static LocalDateTime NOW_PLUS_60_MINS = LocalDateTime.now().plusMinutes(60);
 
-    private static final String COMBINED_INCOME_TRUE = "true";
     @Mock
     private FeedbackService mockService;
 
@@ -63,7 +65,7 @@ public class FeedbackResourceTest {
     }
 
     private List<FeedbackDto> buildFeedbackList() {
-        return ImmutableList.of(createFeedback(NOW, DETAIL), createFeedback(NOW_PLUS_60_MINS, DETAIL_NO_WHY_NOT_SECTION));
+        return ImmutableList.of(createFeedback(NOW, DETAIL), createFeedback(NOW_PLUS_60_MINS, DETAIL_NO_WHY_NOT_SECTION), createFeedback(NOW, DETAIL_BUGGY_WHYNOT));
     }
 
     private FeedbackDto createFeedback(LocalDateTime timestamp, String detail) {
@@ -79,7 +81,11 @@ public class FeedbackResourceTest {
 
 
     private List<FeedbackCsvView> buildFeedbackViewList() {
-        return ImmutableList.of(createFeedbackViewWithWhyNotSection(NOW), createFeedbackViewWithoutWhyNotSection(NOW_PLUS_60_MINS));
+        List<FeedbackCsvView> views = new ArrayList<>();
+        views.add(createFeedbackViewWithWhyNotSection(NOW));
+        views.add(createFeedbackViewWithoutWhyNotSection(NOW_PLUS_60_MINS));
+        views.add(createFeedbackViewWithBuggyWhyNotSection(NOW));
+        return views;
     }
 
     private FeedbackCsvView createFeedbackViewWithoutWhyNotSection(LocalDateTime timestamp) {
@@ -88,6 +94,7 @@ public class FeedbackResourceTest {
                 .userId(USER_ID)
                 .nino("JD123456C")
                 .match("yes")
+                .whynot("")
                 .build();
     }
 
@@ -97,10 +104,18 @@ public class FeedbackResourceTest {
                 .userId(USER_ID)
                 .match("yes")
                 .nino("JB557733D")
-                .caseref("21111111")
-                .combinedIncome(COMBINED_INCOME_TRUE)
-                .multiple_employers("true")
-                .pay_frequency_change("false")
+                .matchOther("test2")
+                .whynot("fail b nonsalaried")
+                .build();
+    }
+
+    private FeedbackCsvView createFeedbackViewWithBuggyWhyNotSection(LocalDateTime timestamp) {
+        return FeedbackCsvView.builder()
+                .timestamp(DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).format(timestamp))
+                .userId(USER_ID)
+                .match("yes")
+                .nino("JB557733D")
+                .whynot("")
                 .matchOther("test2")
                 .build();
     }

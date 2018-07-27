@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.digital.ho.pttg.dto.FeedbackDto;
 
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -20,10 +21,16 @@ public class FeedbackService {
 
     private final RestTemplate restTemplate;
     private final String url;
+    private final String basicAuth;
 
-    public FeedbackService(RestTemplate restTemplate, @Value("${feedback.endpoint}") String url) {
+    public FeedbackService(
+            RestTemplate restTemplate,
+            @Value("${feedback.endpoint}") String url,
+            @Value("${feedback.service.auth}") String basicAuth
+    ) {
         this.restTemplate = restTemplate;
         this.url = url;
+        this.basicAuth = basicAuth;
     }
 
     public List<FeedbackDto> getAllFeedback(){
@@ -31,9 +38,10 @@ public class FeedbackService {
         return restTemplate.exchange(url, HttpMethod.GET, requestEntity, feedbackResourceTypeRef).getBody();
     }
 
-    private static HttpHeaders generateHeaders() {
+    private HttpHeaders generateHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        headers.add(HttpHeaders.AUTHORIZATION, Base64.getEncoder().encodeToString(basicAuth.getBytes()));
         return headers;
     }
 }
