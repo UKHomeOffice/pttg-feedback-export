@@ -24,7 +24,7 @@ public class CsvView extends AbstractCsvView {
     private static final String MAPPING_TIMESTAMP = "timestamp";
     private static final String MAPPING_NINO = "nino";
     private static final String MAPPING_MATCH = "match";
-    private static final String MAPPING_WHYNOT = "whynot";
+    private static final String MAPPING_WHYNOT = "reasonForNotMatch";
     private static final String MAPPING_MATCH_OTHER = "matchOther";
 
     @Override

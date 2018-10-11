@@ -15,7 +15,7 @@ public class FeedbackCsvView {
     private String userId;
     private String nino;
     private String match;
-    private String whynot;
+    private String reasonForNotMatch;
     private String matchOther;
 
 }
