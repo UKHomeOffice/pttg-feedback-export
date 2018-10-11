@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.verify;
@@ -31,9 +30,9 @@ public class FeedbackResourceTest {
     private static final String USER_ID = "me";
     private static final String UUID = "uuid";
     private static final String NAMESPACE = "env";
-    private static final String DETAIL_NO_WHY_NOT_SECTION = "{\"nino\": \"JD123456C\", \"match\": \"yes\"}";
-    private static final String DETAIL = "{\"nino\": \"JB557733D\", \"match\": \"yes\", \"whynot\": \"fail-b-nonsalaried\", \"matchOther\": \"test2\"}";
-    private static final String DETAIL_BUGGY_WHYNOT = "{\"nino\": \"JB557733D\", \"match\": \"yes\", \"whynot\": {}, \"matchOther\": \"test2\"}";
+    private static final String DETAIL_NO_REASON_FOR_NOT_MATCH_SECTION = "{\"nino\": \"JD123456C\", \"match\": \"yes\"}";
+    private static final String DETAIL = "{\"nino\": \"JB557733D\", \"match\": \"yes\", \"reasonForNotMatch\": \"fail-b-nonsalaried\", \"matchOther\": \"test2\"}";
+    private static final String DETAIL_BUGGY_REASON_FOR_NOT_MATCH = "{\"nino\": \"JB557733D\", \"match\": \"yes\", \"reasonForNotMatch\": {}, \"matchOther\": \"test2\"}";
     private static LocalDateTime NOW = LocalDateTime.now();
     private static LocalDateTime NOW_PLUS_60_MINS = LocalDateTime.now().plusMinutes(60);
 
@@ -65,7 +64,7 @@ public class FeedbackResourceTest {
     }
 
     private List<FeedbackDto> buildFeedbackList() {
-        return ImmutableList.of(createFeedback(NOW, DETAIL), createFeedback(NOW_PLUS_60_MINS, DETAIL_NO_WHY_NOT_SECTION), createFeedback(NOW, DETAIL_BUGGY_WHYNOT));
+        return ImmutableList.of(createFeedback(NOW, DETAIL), createFeedback(NOW_PLUS_60_MINS, DETAIL_NO_REASON_FOR_NOT_MATCH_SECTION), createFeedback(NOW, DETAIL_BUGGY_REASON_FOR_NOT_MATCH));
     }
 
     private FeedbackDto createFeedback(LocalDateTime timestamp, String detail) {
@@ -82,40 +81,40 @@ public class FeedbackResourceTest {
 
     private List<FeedbackCsvView> buildFeedbackViewList() {
         List<FeedbackCsvView> views = new ArrayList<>();
-        views.add(createFeedbackViewWithWhyNotSection(NOW));
-        views.add(createFeedbackViewWithoutWhyNotSection(NOW_PLUS_60_MINS));
-        views.add(createFeedbackViewWithBuggyWhyNotSection(NOW));
+        views.add(createFeedbackViewWithReasonForNotMatchSection(NOW));
+        views.add(createFeedbackViewWithoutReasonForNotMatchSection(NOW_PLUS_60_MINS));
+        views.add(createFeedbackViewWithBuggyReasonForNotMatchSection(NOW));
         return views;
     }
 
-    private FeedbackCsvView createFeedbackViewWithoutWhyNotSection(LocalDateTime timestamp) {
+    private FeedbackCsvView createFeedbackViewWithoutReasonForNotMatchSection(LocalDateTime timestamp) {
         return FeedbackCsvView.builder()
                 .timestamp(DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).format(timestamp))
                 .userId(USER_ID)
                 .nino("JD123456C")
                 .match("yes")
-                .whynot("")
+                .reasonForNotMatch("")
                 .build();
     }
 
-    private FeedbackCsvView createFeedbackViewWithWhyNotSection(LocalDateTime timestamp) {
+    private FeedbackCsvView createFeedbackViewWithReasonForNotMatchSection(LocalDateTime timestamp) {
         return FeedbackCsvView.builder()
                 .timestamp(DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).format(timestamp))
                 .userId(USER_ID)
                 .match("yes")
                 .nino("JB557733D")
                 .matchOther("test2")
-                .whynot("fail b nonsalaried")
+                .reasonForNotMatch("fail b nonsalaried")
                 .build();
     }
 
-    private FeedbackCsvView createFeedbackViewWithBuggyWhyNotSection(LocalDateTime timestamp) {
+    private FeedbackCsvView createFeedbackViewWithBuggyReasonForNotMatchSection(LocalDateTime timestamp) {
         return FeedbackCsvView.builder()
                 .timestamp(DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).format(timestamp))
                 .userId(USER_ID)
                 .match("yes")
                 .nino("JB557733D")
-                .whynot("")
+                .reasonForNotMatch("")
                 .matchOther("test2")
                 .build();
     }

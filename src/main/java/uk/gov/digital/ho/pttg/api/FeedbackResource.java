@@ -1,7 +1,6 @@
 package uk.gov.digital.ho.pttg.api;
 
 import com.google.gson.Gson;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,15 +39,15 @@ public class FeedbackResource {
 
     private FeedbackCsvView buildCsvView(FeedbackDto f) {
         Gson mapper = new Gson();
-        FeedbackDetail detail = mapper.fromJson(f.getDetail().replace("\"whynot\": {},", ""), FeedbackDetail.class);
-        String whynot = detail.getWhynot() != null ? detail.getWhynot().replace("-", " ") : "";
+        FeedbackDetail detail = mapper.fromJson(f.getDetail().replace("\"reasonForNotMatch\": {},", ""), FeedbackDetail.class);
+        String reasonForNotMatch = detail.getReasonForNotMatch() != null ? detail.getReasonForNotMatch().replace("-", " ") : "";
         final String formattedTimestamp = f.getTimestamp() !=null ? DateTimeFormatter.ofPattern(CSV_DATE_FORMAT).withLocale(Locale.ENGLISH).format(f.getTimestamp()) : "";
         return FeedbackCsvView.builder()
                 .timestamp(formattedTimestamp)
                 .nino(detail.getNino())
                 .userId(f.getUserId())
                 .match(detail.getMatch())
-                .whynot(whynot)
+                .reasonForNotMatch(reasonForNotMatch)
                 .matchOther(detail.getMatchOther())
                 .build();
     }
