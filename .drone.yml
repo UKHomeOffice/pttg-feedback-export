@@ -14,7 +14,7 @@ pipeline:
     commands:
       - docker build -t pttg-feedback-export .
     when:
-      branch: [master, refs/tags/*]
+      branch: [master, refs/tags/*, EE-11598-feedback-auth-bug]
       event: [push, tag]
 
   push:
