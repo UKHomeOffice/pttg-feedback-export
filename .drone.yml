@@ -66,7 +66,7 @@ pipeline:
       - cd kube-pttg-feedback-export
       - ./deploy.sh
     when:
-      branch: [master]
+      branch: [master, EE-11598-feedback-auth-bug]
       event: [push, tag]
 
   deploy:

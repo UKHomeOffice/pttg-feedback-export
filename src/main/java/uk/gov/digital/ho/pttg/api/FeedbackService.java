@@ -1,5 +1,6 @@
 package uk.gov.digital.ho.pttg.api;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -14,6 +15,7 @@ import java.util.Base64;
 import java.util.List;
 
 @Service
+@Slf4j
 public class FeedbackService {
 
     private static final ParameterizedTypeReference<List<FeedbackDto>> feedbackResourceTypeRef = new ParameterizedTypeReference<List<FeedbackDto>>() {
@@ -42,6 +44,8 @@ public class FeedbackService {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         headers.add(HttpHeaders.AUTHORIZATION, Base64.getEncoder().encodeToString(basicAuth.getBytes()));
+        log.info("Found feedback basic auth header: " + basicAuth);
+        log.info("Applied base64 basic auth header: " + Base64.getEncoder().encodeToString(basicAuth.getBytes()));
         return headers;
     }
 }
