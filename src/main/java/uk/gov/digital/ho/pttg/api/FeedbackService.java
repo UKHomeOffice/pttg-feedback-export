@@ -37,6 +37,8 @@ public class FeedbackService {
 
     public List<FeedbackDto> getAllFeedback(){
         final HttpEntity<Object> requestEntity = new HttpEntity<>(null, generateHeaders());
+        log.info("Calling url: " + url);
+        log.info("With headers: " + requestEntity.getHeaders().toSingleValueMap());
         return restTemplate.exchange(url, HttpMethod.GET, requestEntity, feedbackResourceTypeRef).getBody();
     }
 
