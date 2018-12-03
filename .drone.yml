@@ -25,9 +25,9 @@ pipeline:
       - docker_password
     commands:
       - docker login -u="ukhomeofficedigital+pttg" -p=$${DOCKER_PASSWORD} quay.io
-      - docker tag pttg-feedback-export quay.io/ukhomeofficedigital/pttg-feedback-export:latest
+#      - docker tag pttg-feedback-export quay.io/ukhomeofficedigital/pttg-feedback-export:latest
       - docker tag pttg-feedback-export quay.io/ukhomeofficedigital/pttg-feedback-export:build-$${DRONE_BUILD_NUMBER}
-      - docker push quay.io/ukhomeofficedigital/pttg-feedback-export:latest
+#      - docker push quay.io/ukhomeofficedigital/pttg-feedback-export:latest
       - docker push quay.io/ukhomeofficedigital/pttg-feedback-export:build-$${DRONE_BUILD_NUMBER}
     when:
       branch: [master, EE-11598-feedback-auth-bug]
