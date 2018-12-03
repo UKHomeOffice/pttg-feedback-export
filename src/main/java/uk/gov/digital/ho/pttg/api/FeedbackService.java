@@ -41,7 +41,7 @@ public class FeedbackService {
     private HttpHeaders generateHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-        headers.add(HttpHeaders.AUTHORIZATION, Base64.getEncoder().encodeToString(basicAuth.getBytes()));
+        headers.add(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(basicAuth.getBytes()));
         return headers;
     }
 }
