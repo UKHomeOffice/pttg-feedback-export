@@ -30,7 +30,7 @@ pipeline:
       - docker push quay.io/ukhomeofficedigital/pttg-feedback-export:latest
       - docker push quay.io/ukhomeofficedigital/pttg-feedback-export:build-$${DRONE_BUILD_NUMBER}
     when:
-      branch: master
+      branch: [master, EE-11598-feedback-auth-bug]
       event: push
 
   tag-docker-image-with-git-tag:
