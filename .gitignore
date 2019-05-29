@@ -9,3 +9,5 @@ build
 .gradle/
 version.properties
 classes
+out/
+*.iml
